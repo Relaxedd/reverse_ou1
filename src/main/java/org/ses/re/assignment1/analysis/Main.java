@@ -1,6 +1,7 @@
+package org.ses.re.assignment1.analysis;
+
 import sootup.core.inputlocation.AnalysisInputLocation;
 import sootup.core.jimple.common.stmt.JAssignStmt;
-import sootup.core.jimple.common.stmt.JReturnStmt;
 import sootup.core.jimple.common.stmt.Stmt;
 import sootup.core.model.SootClass;
 import sootup.core.model.SootMethod;
@@ -11,7 +12,6 @@ import sootup.java.bytecode.inputlocation.ArchiveBasedAnalysisInputLocation;
 import sootup.java.core.views.JavaView;
 
 import java.io.File;
-import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 

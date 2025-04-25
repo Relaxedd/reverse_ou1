@@ -1,3 +1,5 @@
+package org.ses.re.assignment1.analysis;
+
 import sootup.analysis.intraprocedural.ForwardFlowAnalysis;
 import sootup.core.graph.BasicBlock;
 import sootup.core.graph.StmtGraph;
