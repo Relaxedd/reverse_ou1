@@ -10,6 +10,8 @@ public class TestApp {
     public void test1() {
         int i = 0;
         int a = 6;
+        int b = 7;
+        a = 5;
         staticVar = 1;
     }
 
@@ -18,12 +20,17 @@ public class TestApp {
      */
     public void test2() {
         int number = 10;
+        int a;
+        int b;
+        int c;
         if (number > 0) {
-            System.out.println("The number is positive.");
+            a = number;
+            staticVar = 2;
         } else if (number < 0) {
-            System.out.println("The number is negative.");
+            b = number;
+            return;
         } else {
-            System.out.println("The number is zero.");
+            c = number;
         }
     }
 
@@ -31,8 +38,9 @@ public class TestApp {
      * TestApp with looping statement
      */
     public void test3() {
+        int number = 0;
         for (int i = 1; i <= 5; i++) {
-            System.out.println("Iteration: " + i);
+            number += i;
         }
     }
 
