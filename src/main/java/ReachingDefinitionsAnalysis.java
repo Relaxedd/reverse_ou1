@@ -7,6 +7,7 @@ import sootup.core.jimple.common.stmt.Stmt;
 
 import javax.annotation.Nonnull;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.Set;
 
 public class ReachingDefinitionsAnalysis extends ForwardFlowAnalysis<Set<JAssignStmt>> {
@@ -30,8 +31,34 @@ public class ReachingDefinitionsAnalysis extends ForwardFlowAnalysis<Set<JAssign
     @Override
     protected void flowThrough(@Nonnull Set<JAssignStmt> in, Stmt d, @Nonnull Set<JAssignStmt> out) {
         // TODO
-        if (!(d instanceof JAssignStmt)) return;
-        JAssignStmt assign = (JAssignStmt) d;
+        // Only handle assignment statements
+        if (d instanceof JAssignStmt) {
+            JAssignStmt assign = (JAssignStmt) d;
+            if (assign.getLeftOp() instanceof Local) {
+                // Extract the variable name (before the SSA index)
+                String lhsRepr = assign.getLeftOp().toString();
+                String varName = lhsRepr.contains("#")
+                        ? lhsRepr.split("#")[0]
+                        : lhsRepr;
+
+                // KILL: remove any earlier defs of the same variable
+                Iterator<JAssignStmt> it = out.iterator();
+                while (it.hasNext()) {
+                    JAssignStmt prev = it.next();
+                    String prevLhs = prev.getLeftOp().toString();
+                    String prevName = prevLhs.contains("#")
+                            ? prevLhs.split("#")[0]
+                            : prevLhs;
+
+                    if (prevName.equals(varName)) {
+                        it.remove();
+                    }
+                }
+
+                // GEN: add the current definition
+                out.add(assign);
+            }
+        }
 
     }
 
@@ -43,12 +70,14 @@ public class ReachingDefinitionsAnalysis extends ForwardFlowAnalysis<Set<JAssign
 
     @Override
     protected void merge(@Nonnull Set<JAssignStmt> in1, @Nonnull Set<JAssignStmt> in2, @Nonnull Set<JAssignStmt> out) {
+        out.clear();
         out.addAll(in1);
         out.addAll(in2);
     }
 
     @Override
     protected void copy(@Nonnull Set<JAssignStmt> in, @Nonnull Set<JAssignStmt> out) {
+        out.clear();
         out.addAll(in);
     }
 }
