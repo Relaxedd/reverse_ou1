@@ -1,5 +1,5 @@
-
 import sootup.core.inputlocation.AnalysisInputLocation;
+import sootup.core.jimple.common.stmt.JAssignStmt;
 import sootup.core.jimple.common.stmt.JReturnStmt;
 import sootup.core.jimple.common.stmt.Stmt;
 import sootup.core.model.SootClass;
@@ -43,11 +43,15 @@ public class Main {
 
         int totalDefinitionsCnt = 0;
 
+
         for (SootClass clazz : view.getClasses()) {
+            System.out.println(clazz.getName());
             for (SootMethod method : clazz.getMethods()) {
+                System.out.println("    " + method.getName());
                 ReachingDefinitionsAnalysis analysis = new ReachingDefinitionsAnalysis(method.getBody().getStmtGraph());
                 for (Stmt d : method.getBody().getStmts()) {
-                    if (d instanceof JReturnStmt) {
+                    System.out.println(d);
+                    if (d instanceof JAssignStmt) {
                         totalDefinitionsCnt += analysis.getFlowAfter(d).size();
                     }
                 }
