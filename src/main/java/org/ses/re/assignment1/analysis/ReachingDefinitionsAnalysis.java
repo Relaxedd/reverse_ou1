@@ -33,10 +33,13 @@ public class ReachingDefinitionsAnalysis extends ForwardFlowAnalysis<Set<JAssign
     @Override
     protected void flowThrough(@Nonnull Set<JAssignStmt> in, Stmt d, @Nonnull Set<JAssignStmt> out) {
         // TODO
+        // Initialize the out set with the in set
         // Only handle assignment statements
         if (d instanceof JAssignStmt) {
             JAssignStmt assign = (JAssignStmt) d;
+            System.out.println("Assign: " + assign);
             if (assign.getLeftOp() instanceof Local) {
+                System.out.println("Local: " + assign.getLeftOp());
                 // Extract the variable name (before the SSA index)
                 String lhsRepr = assign.getLeftOp().toString();
                 String varName = lhsRepr.contains("#")

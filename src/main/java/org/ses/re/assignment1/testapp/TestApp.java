@@ -2,7 +2,7 @@ package org.ses.re.assignment1.testapp;
 
 public class TestApp {
 
-
+    int staticVar = 0;
 
     /**
      * TestApp without branching statements
@@ -10,8 +10,7 @@ public class TestApp {
     public void test1() {
         int i = 0;
         int a = 6;
-        System.out.println("a + i = " + a + i);
-
+        staticVar = 1;
     }
 
     /**
