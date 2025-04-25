@@ -30,6 +30,9 @@ public class ReachingDefinitionsAnalysis extends ForwardFlowAnalysis<Set<JAssign
     @Override
     protected void flowThrough(@Nonnull Set<JAssignStmt> in, Stmt d, @Nonnull Set<JAssignStmt> out) {
         // TODO
+        if (!(d instanceof JAssignStmt)) return;
+        JAssignStmt assign = (JAssignStmt) d;
+
     }
 
     @Nonnull
@@ -40,7 +43,8 @@ public class ReachingDefinitionsAnalysis extends ForwardFlowAnalysis<Set<JAssign
 
     @Override
     protected void merge(@Nonnull Set<JAssignStmt> in1, @Nonnull Set<JAssignStmt> in2, @Nonnull Set<JAssignStmt> out) {
-        // TODO
+        out.addAll(in1);
+        out.addAll(in2);
     }
 
     @Override

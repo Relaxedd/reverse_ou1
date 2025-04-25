@@ -45,12 +45,9 @@ public class Main {
 
 
         for (SootClass clazz : view.getClasses()) {
-            System.out.println(clazz.getName());
             for (SootMethod method : clazz.getMethods()) {
-                System.out.println("    " + method.getName());
                 ReachingDefinitionsAnalysis analysis = new ReachingDefinitionsAnalysis(method.getBody().getStmtGraph());
                 for (Stmt d : method.getBody().getStmts()) {
-                    System.out.println(d);
                     if (d instanceof JAssignStmt) {
                         totalDefinitionsCnt += analysis.getFlowAfter(d).size();
                     }
