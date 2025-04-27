@@ -56,10 +56,12 @@ public class Tests {
         ReachingDefinitionsAnalysis analysis = new ReachingDefinitionsAnalysis(test1.getBody().getStmtGraph());
         List<Stmt> stmts = test1.getBody().getStmts();
 
+        // grab the three JAssignStmts whose definitions should be in the join‐set
         JAssignStmt i0 = (JAssignStmt) stmts.get(1);
         JAssignStmt b7 = (JAssignStmt) stmts.get(3);
         JAssignStmt a5 = (JAssignStmt) stmts.get(4);
 
+        // fetch the last statement in the method
         JReturnVoidStmt lastAssign = (JReturnVoidStmt) stmts.get(stmts.size() - 1);
 
         Set<JAssignStmt> expectedAssignments = Set.of(i0, b7, a5);
@@ -69,7 +71,7 @@ public class Tests {
         Assert.assertEquals("should see 3 assignments", 3, actualAssignments.size());
 
         Assert.assertEquals(
-                "the reaching defs should be {number#1, i#2}",
+                "the reaching definitions should be {number#1, i#2}",
                 expectedAssignments,
                 actualAssignments
         );
@@ -80,18 +82,21 @@ public class Tests {
     public void testapp_test_if_else() {
         ReachingDefinitionsAnalysis analysis = new ReachingDefinitionsAnalysis(test2.getBody().getStmtGraph());
         List<Stmt>  stmts = test2.getBody().getStmts();
-        // grab the three JAssignStmts whose defs should be in the join‐set
+
+        // grab the three JAssignStmts whose definitions should be in the join‐set
         JAssignStmt number0 = (JAssignStmt) stmts.get(1);
         JAssignStmt a1      = (JAssignStmt) stmts.get(3);
         JAssignStmt c3      = (JAssignStmt) stmts.get(9);
+
+        // fetch the last statement in the method
         JReturnVoidStmt lastAssign = (JReturnVoidStmt) stmts.get(stmts.size() - 1);
 
         Set<JAssignStmt> expectedAssignments = Set.of(number0, a1, c3);
 
         Set<JAssignStmt> actualAssignment = analysis.getFlowAfter(lastAssign);
         System.out.println("actualAssignment: " + actualAssignment);
-        Assert.assertEquals("should have exactly 3 reaching defs", 3, actualAssignment.size());
-        Assert.assertEquals("the reaching defs after the join should be {number0,a1,c3}", expectedAssignments, actualAssignment);
+        Assert.assertEquals("should have exactly 3 reaching definitions", 3, actualAssignment.size());
+        Assert.assertEquals("the reaching definitions after the join should be {number0,a1,c3}", expectedAssignments, actualAssignment);
     }
 
     @Test
@@ -101,6 +106,7 @@ public class Tests {
 
         System.out.println("stmts: " + stmts);
 
+
         List<JAssignStmt> assigns = stmts.stream()
                 .filter(s -> s instanceof JAssignStmt)
                 .map(s -> (JAssignStmt)s)
@@ -108,9 +114,8 @@ public class Tests {
 
         Assert.assertEquals("should see 4 assignments", 4, assigns.size());
 
-        // The last assign is the i#2 = i#1 + 1
+        // fetch the two statements expecting to be in the join‐set
         JAssignStmt lastAssign   = assigns.get(assigns.size() - 1);
-        // and the one just before it is number#1 = number#0 + i#1
         JAssignStmt number1Assign = assigns.get(assigns.size() - 2);
 
         Set<JAssignStmt> expected = Set.of(number1Assign, lastAssign);
@@ -118,12 +123,12 @@ public class Tests {
         System.out.println("actualAssignments: " + actual);
 
         Assert.assertEquals(
-                "after the last assignment in the loop body, exactly 2 defs should remain",
+                "after the last assignment in the loop body, exactly 2 definitions should remain",
                 2,
                 actual.size()
         );
         Assert.assertEquals(
-                "the reaching defs should be {number#1, i#2}",
+                "the reaching definitions should be {number#1, i#2}",
                 expected,
                 actual
         );

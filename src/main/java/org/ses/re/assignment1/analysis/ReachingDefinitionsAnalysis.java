@@ -32,29 +32,24 @@ public class ReachingDefinitionsAnalysis extends ForwardFlowAnalysis<Set<JAssign
      */
     @Override
     protected void flowThrough(@Nonnull Set<JAssignStmt> in, Stmt d, @Nonnull Set<JAssignStmt> out) {
-        // TODO
         // Initialize the out set with the in set
-        // Only handle assignment statements
         out.clear();
         out.addAll(in);
-        System.out.println("in: " + in);
         if (d instanceof JAssignStmt) {
             JAssignStmt assign = (JAssignStmt) d;
             if (assign.getLeftOp() instanceof Local) {
-                // Extract the variable name (before the SSA index)
+                // Get left-hand side variable representation
                 String lhsRepr = assign.getLeftOp().toString();
+                // Remove the SSA index (e.g. #0, #1, etc.)
                 String varName = lhsRepr.contains("#")
                         ? lhsRepr.split("#")[0]
                         : lhsRepr;
 
-                // KILL: remove any earlier defs of the same variable
+                // KILL: remove any earlier definitions of the same variable
                 Iterator<JAssignStmt> it = out.iterator();
                 while (it.hasNext()) {
-
                     JAssignStmt prev = it.next();
-                    //System.out.println("prev: " + prev);
                     String prevLhs = prev.getLeftOp().toString();
-                    //System.out.println("prevLhs: " + prevLhs);
                     String prevName = prevLhs.contains("#")
                             ? prevLhs.split("#")[0]
                             : prevLhs;
@@ -68,7 +63,6 @@ public class ReachingDefinitionsAnalysis extends ForwardFlowAnalysis<Set<JAssign
                 out.add(assign);
             }
         }
-        System.out.println("out: " + out);
 
     }
 
@@ -80,11 +74,9 @@ public class ReachingDefinitionsAnalysis extends ForwardFlowAnalysis<Set<JAssign
 
     @Override
     protected void merge(@Nonnull Set<JAssignStmt> in1, @Nonnull Set<JAssignStmt> in2, @Nonnull Set<JAssignStmt> out) {
-        System.out.println("merge: " + in1 + " " + in2);
         out.clear();
         out.addAll(in1);
         out.addAll(in2);
-        System.out.println("out: " + out);
     }
 
     @Override
